@@ -1,10 +1,13 @@
+#include <EEPROM.h>
+#include <FastIMU.h>
 #include <Arduino.h>
-#include <Wire.h>
+
 
 void setup() {
-	pinMode(LED_BUILTIN, OUTPUT);
-	Wire.begin();
 	Serial.begin(9600);
+	pinMode(LED_BUILTIN, OUTPUT);
+	Serial.print("EEPROM Size: ");
+	Serial.println(EEPROM.length());
 }
 
 void loop(){
