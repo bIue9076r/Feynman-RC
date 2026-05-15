@@ -1,17 +1,55 @@
-#include <EEPROM.h>
+#include <SD.h>
 #include <FastIMU.h>
 #include <Arduino.h>
-
+#include "genlib.h"
+#include "calib.h"
+#include "flight.h"
+#include "recovery.h"
 
 void setup() {
+	// SD.begin();
+	Wire.begin();
 	Serial.begin(9600);
-	pinMode(LED_BUILTIN, OUTPUT);
-	Serial.print("EEPROM Size: ");
-	Serial.println(EEPROM.length());
+
+	then = millis();
 }
 
 void loop(){
-	
+	int status = 0;
+	switch(Stage){
+		case 0:	// Pre Launch
+			Pre_Flight_Complete = 1;
+			if(Pre_Flight_Complete){
+				Stage = 1;	// Skip Launch prep
+			}
+		break;
+
+		case 1: // Calibration
+			status = Calibrate();
+
+			// wait for signal
+			Calibration_Complete = 1;
+			if(Calibration_Complete){
+				Stage = 2;
+			}
+		break;
+
+		case 2:	// Flight
+			status = Flight();
+
+			if(Flight_Complete){
+				Stage = 3;
+			}
+		break;
+
+		case 3:	// Recovery
+			status = Recovery();
+		break;
+	}
+
+	if(status){
+		Abort();
+	}
 }
 
 int main(void){
