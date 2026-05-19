@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #ifndef GENLIB_CPP
 #define GENLIB_CPP
 #include "genlib.h"
@@ -8,6 +7,9 @@ int Pre_Flight_Complete = 0;
 int Calibration_Complete = 0;
 int Flight_Complete = 0;
 
+int NoIMU = 0;
+int NoBMP = 0;
+
 MPU6500 IMU;
 calData calib = {0};
 AccelData AData;
@@ -15,10 +17,13 @@ AccelData ALast;
 float AX = 0.0;
 float AY = 0.0;
 float AZ = 0.0;
-int samples = 0;
-long long then;
+int accel_samples = 0;
+long long accel_then;
+float accel_tolerance = 0.1;
 
-float tolerance = 0.1;
+Adafruit_BMP085 BMP;
+BaroData BData = {0.0,0.0};
+long long baro_then;
 
 void Abort(void){
 	pinMode(LED_BUILTIN, OUTPUT);

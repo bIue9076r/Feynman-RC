@@ -3,7 +3,9 @@
 #include "genlib.h"
 
 void getAccelData(void);
-void ShowData(void);
+void getBaroData(void);
+void ShowAccelData(void);
+void ShowBaroData(void);
 
 int Flight(void);
 

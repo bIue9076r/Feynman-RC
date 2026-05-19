@@ -1,5 +1,6 @@
 #include <SD.h>
 #include <FastIMU.h>
+#include <Adafruit_BMP085.h>
 #include <Arduino.h>
 #include "genlib.h"
 #include "calib.h"
@@ -11,7 +12,9 @@ void setup() {
 	Wire.begin();
 	Serial.begin(9600);
 
-	then = millis();
+	unsigned long long now = millis();
+	accel_then = now;
+	baro_then = now;
 }
 
 void loop(){
