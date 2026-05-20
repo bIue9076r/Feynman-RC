@@ -13,6 +13,8 @@ extern int Flight_Complete;
 extern int NoIMU;
 extern int NoBMP;
 
+extern File dataFile;
+
 extern MPU6500 IMU;
 extern calData calib;
 extern AccelData AData;
@@ -21,7 +23,7 @@ extern float AX;
 extern float AY;
 extern float AZ;
 extern int accel_samples;
-extern long long accel_then;
+extern unsigned long accel_then;
 extern float accel_tolerance;
 
 extern Adafruit_BMP085 BMP;
@@ -32,7 +34,7 @@ typedef struct {
 } BaroData;
 
 extern BaroData BData;
-extern long long baro_then;
+extern unsigned long baro_then;
 
 void Abort(void);
 float fabs(float a, float b);

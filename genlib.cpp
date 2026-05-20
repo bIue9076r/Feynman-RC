@@ -10,6 +10,8 @@ int Flight_Complete = 0;
 int NoIMU = 0;
 int NoBMP = 0;
 
+File dataFile;
+
 MPU6500 IMU;
 calData calib = {0};
 AccelData AData;
@@ -18,12 +20,12 @@ float AX = 0.0;
 float AY = 0.0;
 float AZ = 0.0;
 int accel_samples = 0;
-long long accel_then;
+unsigned long accel_then;
 float accel_tolerance = 0.1;
 
 Adafruit_BMP085 BMP;
 BaroData BData = {0.0,0.0};
-long long baro_then;
+unsigned long baro_then;
 
 void Abort(void){
 	pinMode(LED_BUILTIN, OUTPUT);

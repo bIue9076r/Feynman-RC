@@ -1,3 +1,4 @@
+#include "SD.h"
 #ifndef FLIGHT_CPP
 #define FLIGHT_CPP
 #include "flight.h"
@@ -26,7 +27,7 @@ void getBaroData(void){
 	BData.altitude = BData.altitude + BMP.readAltitude();
 }
 
-void ShowAccelData(){
+void ShowAccelData(unsigned long n){
 	if(accel_samples > 0){
 		AX = AX / accel_samples;
 		AY = AY / accel_samples;
@@ -36,18 +37,50 @@ void ShowAccelData(){
 	}
 
 	Serial.print("A: ");
+	Serial.print(n);
+	Serial.print(", ");
 	Serial.print(AX);
 	Serial.print(",");
 	Serial.print(AY);
 	Serial.print(",");
 	Serial.println(AZ);
+
+	SaveAccelData(n, AX, AY, AZ);
 }
 
-void ShowBaroData(void){
+void ShowBaroData(unsigned long n){
 	Serial.print("B: ");
+	Serial.print(n);
+	Serial.print(", ");
 	Serial.print(BData.pressure);
 	Serial.print(",");
 	Serial.println(BData.altitude);
+
+	SaveBaroData(n, BData.pressure, BData.altitude);
+}
+
+void SaveAccelData(unsigned long n, float x, float y, float z){
+	dataFile = SD.open("Dat/Accel.dat", FILE_WRITE);
+	if(dataFile){
+		dataFile.print(n);
+		dataFile.print(", ");
+		dataFile.print(x);
+		dataFile.print(",");
+		dataFile.print(y);
+		dataFile.print(",");
+		dataFile.println(z);
+	}
+}
+
+void SaveBaroData(unsigned long n, float p, float a){
+	dataFile = SD.open("Dat/Barom.dat", FILE_WRITE);
+	if(dataFile){
+		dataFile.print(n);
+		dataFile.print(", ");
+		dataFile.print(p);
+		dataFile.print(",");
+		dataFile.println(a);
+	}
 }
 
 int Flight(void){
@@ -56,11 +89,11 @@ int Flight(void){
 		getAccelData();
 	}
 
-	unsigned long long now = millis();
+	unsigned long now = millis();
 
 	if(!NoIMU){
 		if(now - accel_then > 10){
-			ShowAccelData();
+			ShowAccelData(now);
 			AX = AY = AZ = 0.0;
 			accel_samples = 0;
 			accel_then = now;
@@ -68,9 +101,9 @@ int Flight(void){
 	}
 
 	if(!NoBMP){
-		if(now - baro_then > 10){
+		if(now - baro_then > 1000){
 			getBaroData();
-			ShowBaroData();
+			ShowBaroData(now);
 			BData.pressure = BData.altitude = 0.0;
 			baro_then = now;
 		}

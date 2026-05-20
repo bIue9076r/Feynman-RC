@@ -3,6 +3,27 @@
 #include "calib.h"
 
 int Calibrate(void){
+	unsigned long long now = millis();
+	accel_then = now;
+	baro_then = now;
+
+	if(!SD.begin()){
+		Serial.println("SD Card Error");
+		return 1;
+	}
+
+	if(!SD.exists("Dat/")){
+		SD.mkdir("Dat/");
+	}
+
+	if(!SD.exists("Dat/Accel.dat")){
+		SD.remove("Dat/Accel.dat");
+	}
+
+	if(!SD.exists("Dat/Barom.dat")){
+		SD.remove("Dat/Barom.dat");
+	}
+
 	if(IMU.init(calib)){
 		Serial.println("Accelerometer Error");
 		NoIMU = 1;

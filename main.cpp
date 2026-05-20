@@ -8,13 +8,8 @@
 #include "recovery.h"
 
 void setup() {
-	// SD.begin();
 	Wire.begin();
 	Serial.begin(9600);
-
-	unsigned long long now = millis();
-	accel_then = now;
-	baro_then = now;
 }
 
 void loop(){
