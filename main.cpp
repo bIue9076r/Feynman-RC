@@ -16,31 +16,40 @@ void loop(){
 	int status = 0;
 	switch(Stage){
 		case 0:	// Pre Launch
-			Pre_Flight_Complete = 1;
-			if(Pre_Flight_Complete){
+			Pre_Launch_Complete = 1;
+			if(Pre_Launch_Complete){
 				Stage = 1;	// Skip Launch prep
 			}
 		break;
 
 		case 1: // Calibration
 			status = Calibrate();
-
-			// wait for signal
 			Calibration_Complete = 1;
 			if(Calibration_Complete){
 				Stage = 2;
 			}
 		break;
 
-		case 2:	// Flight
-			status = Flight();
-
-			if(Flight_Complete){
+		case 2:	// Pre Flight
+			Pre_Flight_Complete = 1;
+			pinMode(LIGHT_PIN, OUTPUT);
+			digitalWrite(LIGHT_PIN, HIGH);
+			delay(LIGHT_DELAY);
+			digitalWrite(LIGHT_PIN, LOW);
+			if(Pre_Flight_Complete){
 				Stage = 3;
 			}
 		break;
 
-		case 3:	// Recovery
+		case 3:	// Flight
+			status = Flight();
+
+			if(Flight_Complete){
+				Stage = 4;
+			}
+		break;
+
+		case 4:	// Recovery
 			status = Recovery();
 		break;
 	}

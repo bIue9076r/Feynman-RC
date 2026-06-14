@@ -3,8 +3,9 @@
 #include "genlib.h"
 
 int Stage = 0;
-int Pre_Flight_Complete = 0;
+int Pre_Launch_Complete = 0;
 int Calibration_Complete = 0;
+int Pre_Flight_Complete = 0;
 int Flight_Complete = 0;
 
 int NoIMU = 0;
@@ -28,11 +29,11 @@ BaroData BData = {0.0,0.0};
 unsigned long baro_then;
 
 void Abort(void){
-	pinMode(LED_BUILTIN, OUTPUT);
+	pinMode(LIGHT_PIN, OUTPUT);
 	for(;;){
-		digitalWrite(LED_BUILTIN, HIGH);
+		digitalWrite(LIGHT_PIN, HIGH);
 		delay(500);
-		digitalWrite(LED_BUILTIN, LOW);
+		digitalWrite(LIGHT_PIN, LOW);
 		delay(500);
 	}
 }

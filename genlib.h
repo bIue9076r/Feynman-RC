@@ -6,8 +6,9 @@
 #include <Arduino.h>
 
 extern int Stage;
-extern int Pre_Flight_Complete;
+extern int Pre_Launch_Complete;
 extern int Calibration_Complete;
+extern int Pre_Flight_Complete;
 extern int Flight_Complete;
 
 extern int NoIMU;
@@ -39,5 +40,8 @@ extern unsigned long baro_then;
 void Abort(void);
 float fabs(float a, float b);
 int fround(float a);
+
+#define LIGHT_PIN 2
+#define LIGHT_DELAY (5*1000)
 
 #endif
