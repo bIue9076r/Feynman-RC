@@ -5,6 +5,10 @@
 #include <Adafruit_BMP085.h>
 #include <Arduino.h>
 
+// #define SEND_SIG
+#define ACCEL_PATH "ACCEL.DAT"
+#define BAROM_PATH "BAROM.DAT"
+
 extern int Stage;
 extern int Pre_Launch_Complete;
 extern int Calibration_Complete;
@@ -43,5 +47,8 @@ int fround(float a);
 
 #define LIGHT_PIN 2
 #define LIGHT_DELAY (5*1000)
+
+#define ACCEL_DELAY 10
+#define BARO_DELAY 10
 
 #endif

@@ -8,29 +8,30 @@ int Calibrate(void){
 	baro_then = now;
 
 	if(!SD.begin()){
+		#ifdef SEND_SIG
 		Serial.println("SD Card Error");
+		#endif
 		return 1;
 	}
 
-	if(!SD.exists("Dat/")){
-		SD.mkdir("Dat/");
+	if(SD.exists(ACCEL_PATH)){
+		SD.remove(ACCEL_PATH);
 	}
 
-	if(!SD.exists("Dat/Accel.dat")){
-		SD.remove("Dat/Accel.dat");
-	}
-
-	if(!SD.exists("Dat/Barom.dat")){
-		SD.remove("Dat/Barom.dat");
+	if(SD.exists(BAROM_PATH)){
+		SD.remove(BAROM_PATH);
 	}
 
 	if(IMU.init(calib)){
+		#ifdef SEND_SIG
 		Serial.println("Accelerometer Error");
+		#endif
 		NoIMU = 1;
 	}
 
 	if(!NoIMU){
 		IMU.calibrateAccelGyro(&calib);
+		#ifdef SEND_SIG
 		Serial.println("");
 		Serial.print("Accel Bias: ");
 		Serial.print(calib.accelBias[0]);
@@ -39,10 +40,22 @@ int Calibrate(void){
 		Serial.print("\t");
 		Serial.print(calib.accelBias[2]);
 		Serial.print("\n");
+		#endif
+
+		dataFile = SD.open(ACCEL_PATH, FILE_WRITE);
+		dataFile.print("Accel Bias: ");
+		dataFile.print(calib.accelBias[0]);
+		dataFile.print("\t");
+		dataFile.print(calib.accelBias[1]);
+		dataFile.print("\t");
+		dataFile.println(calib.accelBias[2]);
+		dataFile.close();
 	}
 
 	if(!BMP.begin()){
+		#ifdef SEND_SIG
 		Serial.println("Barometer Error");
+		#endif
 		NoBMP = 1;
 	}
 

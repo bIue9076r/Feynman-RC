@@ -9,7 +9,9 @@
 
 void setup() {
 	Wire.begin();
+	#ifdef SEND_SIG
 	Serial.begin(9600);
+	#endif
 }
 
 void loop(){

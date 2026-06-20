@@ -36,6 +36,7 @@ void ShowAccelData(unsigned long n){
 		AX = AY = AZ = 0.0;
 	}
 
+	#ifdef SEND_SIG
 	Serial.print("A: ");
 	Serial.print(n);
 	Serial.print(", ");
@@ -44,23 +45,26 @@ void ShowAccelData(unsigned long n){
 	Serial.print(AY);
 	Serial.print(",");
 	Serial.println(AZ);
+	#endif
 
 	SaveAccelData(n, AX, AY, AZ);
 }
 
 void ShowBaroData(unsigned long n){
+	#ifdef SEND_SIG
 	Serial.print("B: ");
 	Serial.print(n);
 	Serial.print(", ");
 	Serial.print(BData.pressure);
 	Serial.print(",");
 	Serial.println(BData.altitude);
+	#endif
 
 	SaveBaroData(n, BData.pressure, BData.altitude);
 }
 
 void SaveAccelData(unsigned long n, float x, float y, float z){
-	dataFile = SD.open("Dat/Accel.dat", FILE_WRITE);
+	dataFile = SD.open(ACCEL_PATH, FILE_WRITE);
 	if(dataFile){
 		dataFile.print(n);
 		dataFile.print(", ");
@@ -70,10 +74,11 @@ void SaveAccelData(unsigned long n, float x, float y, float z){
 		dataFile.print(",");
 		dataFile.println(z);
 	}
+	dataFile.close();
 }
 
 void SaveBaroData(unsigned long n, float p, float a){
-	dataFile = SD.open("Dat/Barom.dat", FILE_WRITE);
+	dataFile = SD.open(BAROM_PATH, FILE_WRITE);
 	if(dataFile){
 		dataFile.print(n);
 		dataFile.print(", ");
@@ -81,6 +86,7 @@ void SaveBaroData(unsigned long n, float p, float a){
 		dataFile.print(",");
 		dataFile.println(a);
 	}
+	dataFile.close();
 }
 
 int Flight(void){
@@ -92,7 +98,7 @@ int Flight(void){
 	unsigned long now = millis();
 
 	if(!NoIMU){
-		if(now - accel_then > 10){
+		if(now - accel_then > ACCEL_DELAY){
 			ShowAccelData(now);
 			AX = AY = AZ = 0.0;
 			accel_samples = 0;
@@ -101,7 +107,7 @@ int Flight(void){
 	}
 
 	if(!NoBMP){
-		if(now - baro_then > 1000){
+		if(now - baro_then > BARO_DELAY){
 			getBaroData();
 			ShowBaroData(now);
 			BData.pressure = BData.altitude = 0.0;
